@@ -6,7 +6,7 @@ sfinstall [subdirectory]
 ```
 
 ## Description
-Installe la toute dernière version de Symfony 
+Installe Symfony 
 
 ## Installation
 
