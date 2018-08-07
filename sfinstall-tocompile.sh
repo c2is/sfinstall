@@ -35,7 +35,7 @@ rm -rf ..?* .[!.]* *
 . $abs_path/install.sh
 . $abs_path/docker.sh
 
-echo "FINI"
+echo -y "L'installation est terminé"
 
 
 

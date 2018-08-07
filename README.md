@@ -6,7 +6,7 @@ sfinstall [subdirectory]
 ```
 
 ## Description
-Installe Symfony 
+Installe Symfony et optionnellement un environnement docker 
 
 ## Installation
 

@@ -292,7 +292,7 @@ Changer les params dans wordpress (db host etc.)
 COMMENT
 
 
-echo "FINI"
+echo -y "L'installation est terminé"
 
 
 
