@@ -11,7 +11,7 @@ Installe Symfony et optionnellement un environnement docker
 L'installation de Symfony fournit :
 - un .gitignore adapté,
 - un parameters.yml prêt à l'emploi avec docker,
-- les fichier *-at-preprod *-at-prod utilisés chez Acti.
+- les fichiers *-at-preprod *-at-prod utilisés chez Acti.
 
 
 L'environnement docker fournit :
