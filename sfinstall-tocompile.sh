@@ -23,7 +23,7 @@ else
 fi
 
 sudo_opt=""
-read -p "Avez-vous besoin sudo ok [Y,n] : " yn
+read -p "Avez-vous besoin sudo pour les commandes docker ? [Y,n] : " yn
 if [[ $yn =~ ^[Yy]$ ]]
 then
     sudo_opt="sudo"
@@ -35,7 +35,6 @@ rm -rf ..?* .[!.]* *
 . $abs_path/install.sh
 . $abs_path/docker.sh
 
-echo -y "L'installation est terminé"
+echolor -y "L'installation est terminée"
 
-
-
+. $abs_path/clone.sh

@@ -59,19 +59,46 @@ EOF
 
 function symfony4_install() {
 	#docker-compose run composer composer create-project symfony/website-skeleton /var/www/website/
-	$sudo_opt docker run --rm --interactive --tty --volume $PWD:/var/www/website composer create-project symfony/website-skeleton /var/www/website/
-	echolor y "Mise en place des fichiers de configutations \"-at-preprod\" et \"-at-prod\""
+	$sudo_opt docker run --rm --interactive --tty --volume $PWD:/var/www/website composer create-project symfony/website-skeleton /var/www/website/ $version
+
 
 }
 function symfony_install() {
-    $sudo_opt docker run --rm --interactive --tty --volume $PWD:/var/www/website composer create-project symfony/framework-standard-edition /var/www/website/ "2.8.*"
+    $sudo_opt docker run --rm --interactive --tty --volume $PWD:/var/www/website composer -n create-project symfony/framework-standard-edition /var/www/website/ $version
+	echolor y "Mise en place des fichiers de configutations"
+
+	cat << EOF > $install_path/app/config/parameters.yml
+parameters:
+    database_host: db
+    database_port: null
+    database_name: website
+    database_user: root
+    database_password: root
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    secret: ThisTokenIsNotSoSecretChangeIt
+EOF
 	cp $install_path"/app/config/parameters.yml.dist" $install_path"/app/config/parameters.yml-at-prod"
 	cp $install_path"/app/config/parameters.yml.dist" $install_path"/app/config/parameters.yml-at-preprod"
 }
 
+versions=("2.8.*" "3.4.*" "4.1.*")
+echo "Liste des versions installables :"
+PS3="Choix de la version : "
+select opt in ${versions[@]}
+do
+  version=$opt
+  break
+done
 
 echolor y "Récupération de Symfony dans "$install_path
-symfony_install
+if [[ "$version" =~ ^4 ]]; then
+	symfony4_install
+else
+	symfony_install
+fi
 
 gitignore
 

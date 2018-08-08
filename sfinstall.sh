@@ -47,7 +47,7 @@ else
 fi
 
 sudo_opt=""
-read -p "Avez-vous besoin sudo ok [Y,n] : " yn
+read -p "Avez-vous besoin sudo pour les commandes docker ? [Y,n] : " yn
 if [[ $yn =~ ^[Yy]$ ]]
 then
     sudo_opt="sudo"
@@ -117,19 +117,46 @@ EOF
 
 function symfony4_install() {
 	#docker-compose run composer composer create-project symfony/website-skeleton /var/www/website/
-	$sudo_opt docker run --rm --interactive --tty --volume $PWD:/var/www/website composer create-project symfony/website-skeleton /var/www/website/
-	echolor y "Mise en place des fichiers de configutations \"-at-preprod\" et \"-at-prod\""
+	$sudo_opt docker run --rm --interactive --tty --volume $PWD:/var/www/website composer create-project symfony/website-skeleton /var/www/website/ $version
+
 
 }
 function symfony_install() {
-    $sudo_opt docker run --rm --interactive --tty --volume $PWD:/var/www/website composer create-project symfony/framework-standard-edition /var/www/website/ "2.8.*"
+    $sudo_opt docker run --rm --interactive --tty --volume $PWD:/var/www/website composer -n create-project symfony/framework-standard-edition /var/www/website/ $version
+	echolor y "Mise en place des fichiers de configutations"
+
+	cat << EOF > $install_path/app/config/parameters.yml
+parameters:
+    database_host: db
+    database_port: null
+    database_name: website
+    database_user: root
+    database_password: root
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    secret: ThisTokenIsNotSoSecretChangeIt
+EOF
 	cp $install_path"/app/config/parameters.yml.dist" $install_path"/app/config/parameters.yml-at-prod"
 	cp $install_path"/app/config/parameters.yml.dist" $install_path"/app/config/parameters.yml-at-preprod"
 }
 
+versions=("2.8.*" "3.4.*" "4.1.*")
+echo "Liste des versions installables :"
+PS3="Choix de la version : "
+select opt in ${versions[@]}
+do
+  version=$opt
+  break
+done
 
 echolor y "Récupération de Symfony dans "$install_path
-symfony_install
+if [[ "$version" =~ ^4 ]]; then
+	symfony4_install
+else
+	symfony_install
+fi
 
 gitignore
 
@@ -152,8 +179,8 @@ function dockerize () {
 
 	for port in $ports_wanted; do
 		if [ "$(is_used $port)" == "y" ]; then
-			if [ "$port" == "80" ]; then
-				read -p "Voulez vous stopper les containers des autres projets tournant sur le port 80 ? [y,N] " resp
+			if [ "$port" == "80" ] || [ "$port" == "443" ]; then
+				read -p "Voulez-vous stopper les containers des autres projets tournant sur le port 80 ? [y,N] " resp
 		    	if [ $resp == "y" ]; then docker stop $(docker ps |grep ":80->" | cut -d " " -f1); fi
 			fi
 		fi
@@ -165,10 +192,10 @@ function dockerize () {
 		fi
 	done
 
-	read -p "Domaine pour le vhost ?"$'\n' domain
-	perl -pi -e "s/- WEBSITE_HOST=domain/- WEBSITE_HOST=$domain/" docker-compose.yml
+	read -p "Domaine pour le vhost (s'il se finit par dev.acti vous aurez un certificat ssl valide) : "$'\n' domain
+	perl -pi -e "s/- WEBSITE_HOST=unprojet.dev.acti/- WEBSITE_HOST=$domain/" docker-compose.yml
 
-	perl -pi -e "s/- CERTIFICAT_CNAME=domain/- CERTIFICAT_CNAME=$domain/" docker-compose.yml
+	perl -pi -e "s/- CERTIFICAT_CNAME=unprojet.dev.acti/- CERTIFICAT_CNAME=$domain/" docker-compose.yml
 
 	read -p "Voulez-vous ajouter la ligne \"127.0.0.1 $domain\" à votre fichier hosts ? [y,N] " resp
 	if [ $resp != "y" ]; then 
@@ -185,9 +212,9 @@ function dockerize () {
 
 	mysql_container=`basename $(pwd) | sed "s/_//g"`
 	echo '""""""""""""""""'
-	echo "Maintenant vous pouvez importer un dump mysql, par exemple :"
+	echolor g "Maintenant vous pouvez importer un dump mysql, par exemple :"
 	echo ""
-	echo "docker exec -i "$mysql_container"_db_1 mysql website < ./dump.sql"
+	echolor g "docker exec -i "$mysql_container"_db_1 mysql website < ./dump.sql"
 }
 
 
@@ -288,11 +315,21 @@ fi
 
 : <<'COMMENT'
 TODO
-Changer les params dans wordpress (db host etc.)
+
 COMMENT
 
 
-echo -y "L'installation est terminé"
+echolor -y "L'installation est terminée"
 
 
-
+read -p "Souhaitez-vous cloner un projet ici ? [y,N] " resp
+if [ $resp != "y" ]; then 
+	echo "Ok, ok, on oublie..."; 
+else
+		read -p "Url du repository (format ssh : git@github.com:c2is/XXX.git par exemple) : " giturl
+		git clone $giturl clonetmp
+		cd clonetmp
+		mv .[!.]* ../
+		mv * ../
+		rm -rf clonetmp
+fi

@@ -15,8 +15,8 @@ function dockerize () {
 
 	for port in $ports_wanted; do
 		if [ "$(is_used $port)" == "y" ]; then
-			if [ "$port" == "80" ]; then
-				read -p "Voulez vous stopper les containers des autres projets tournant sur le port 80 ? [y,N] " resp
+			if [ "$port" == "80" ] || [ "$port" == "443" ]; then
+				read -p "Voulez-vous stopper les containers des autres projets tournant sur le port 80 ? [y,N] " resp
 		    	if [ $resp == "y" ]; then docker stop $(docker ps |grep ":80->" | cut -d " " -f1); fi
 			fi
 		fi
@@ -28,10 +28,10 @@ function dockerize () {
 		fi
 	done
 
-	read -p "Domaine pour le vhost ?"$'\n' domain
-	perl -pi -e "s/- WEBSITE_HOST=domain/- WEBSITE_HOST=$domain/" docker-compose.yml
+	read -p "Domaine pour le vhost (s'il se finit par dev.acti vous aurez un certificat ssl valide) : "$'\n' domain
+	perl -pi -e "s/- WEBSITE_HOST=unprojet.dev.acti/- WEBSITE_HOST=$domain/" docker-compose.yml
 
-	perl -pi -e "s/- CERTIFICAT_CNAME=domain/- CERTIFICAT_CNAME=$domain/" docker-compose.yml
+	perl -pi -e "s/- CERTIFICAT_CNAME=unprojet.dev.acti/- CERTIFICAT_CNAME=$domain/" docker-compose.yml
 
 	read -p "Voulez-vous ajouter la ligne \"127.0.0.1 $domain\" à votre fichier hosts ? [y,N] " resp
 	if [ $resp != "y" ]; then 
@@ -48,9 +48,9 @@ function dockerize () {
 
 	mysql_container=`basename $(pwd) | sed "s/_//g"`
 	echo '""""""""""""""""'
-	echo "Maintenant vous pouvez importer un dump mysql, par exemple :"
+	echolor g "Maintenant vous pouvez importer un dump mysql, par exemple :"
 	echo ""
-	echo "docker exec -i "$mysql_container"_db_1 mysql website < ./dump.sql"
+	echolor g "docker exec -i "$mysql_container"_db_1 mysql website < ./dump.sql"
 }
 
 
@@ -151,5 +151,5 @@ fi
 
 : <<'COMMENT'
 TODO
-Changer les params dans wordpress (db host etc.)
+
 COMMENT
