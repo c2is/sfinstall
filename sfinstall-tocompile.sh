@@ -23,7 +23,7 @@ else
 fi
 
 sudo_opt=""
-read -p "Avez-vous besoin sudo pour les commandes docker ? [Y,n] : " yn
+read -p "Avez-vous besoin de sudo pour les commandes docker ? [Y,n] : " yn
 if [[ $yn =~ ^[Yy]$ ]]
 then
     sudo_opt="sudo"

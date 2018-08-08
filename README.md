@@ -8,7 +8,7 @@ sfinstall [subdirectory]
 ## Description
 Installe Symfony et optionnellement un environnement docker 
 L'environnement docker fourni :
-- apach, php-fpm, mysql...
+- apache, php-fpm, mysql...
 - un certificat ssl valide pour les domaines types *.dev.acti
 - un service mail utilisable en smtp ou directemnt via sendmail dans le container php
 

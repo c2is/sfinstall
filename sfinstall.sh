@@ -47,7 +47,7 @@ else
 fi
 
 sudo_opt=""
-read -p "Avez-vous besoin sudo pour les commandes docker ? [Y,n] : " yn
+read -p "Avez-vous besoin de sudo pour les commandes docker ? [Y,n] : " yn
 if [[ $yn =~ ^[Yy]$ ]]
 then
     sudo_opt="sudo"
@@ -132,10 +132,16 @@ parameters:
     database_name: website
     database_user: root
     database_password: root
-    mailer_transport: smtp
-    mailer_host: 127.0.0.1
-    mailer_user: null
-    mailer_password: null
+    # utilise sendmail dans le container php, sendmail étant en fait un ssmtp utilisant le container "mail"
+    mailer_transport: mail
+    mailer_host: ~
+    mailer_user: ~
+    mailer_password: ~
+    # possible d'utiliser le container "mail" directement en smtp :
+    # mailer_transport: smtp
+    # mailer_host: mail
+    # mailer_user: web
+    # mailer_password: web
     secret: ThisTokenIsNotSoSecretChangeIt
 EOF
 	cp $install_path"/app/config/parameters.yml.dist" $install_path"/app/config/parameters.yml-at-prod"
@@ -196,6 +202,8 @@ function dockerize () {
 	perl -pi -e "s/- WEBSITE_HOST=unprojet.dev.acti/- WEBSITE_HOST=$domain/" docker-compose.yml
 
 	perl -pi -e "s/- CERTIFICAT_CNAME=unprojet.dev.acti/- CERTIFICAT_CNAME=$domain/" docker-compose.yml
+
+	perl -pi -e "s/- maildomain=unprojet.dev.acti/- maildomain=$domain/" docker-compose.yml
 
 	read -p "Voulez-vous ajouter la ligne \"127.0.0.1 $domain\" à votre fichier hosts ? [y,N] " resp
 	if [ $resp != "y" ]; then 
@@ -264,7 +272,7 @@ function get_next_free_port() {
 function docker_compose_write () {
 	cat << EOF > $install_path/docker-compose.yml
 application:
-    image: debian:jessie
+    image: debian:stretch
     volumes:
         - ./:/var/www/website
     tty: true
@@ -276,11 +284,12 @@ db:
         MYSQL_DATABASE: website
         MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
 php:
-    image: php:7.0.31-fpm-stretch
+    image: c2is/debian-php
     volumes_from:
         - application
     links:
         - db
+        - mail
 composer:
     image: composer
     volumes_from:
@@ -300,6 +309,13 @@ apache:
         - php
     volumes_from:
         - application
+mail:
+    image: catatnight/postfix
+    environment:
+        - maildomain=unprojet.dev.acti
+        - smtp_user=web:web
+    ports:
+        - "25"
 EOF
 
 }
