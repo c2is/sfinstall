@@ -46,14 +46,14 @@ if [ "$sudo_opt" == "sudo" ]; then
 fi
 
 setfacl=$(setfacl)
-if [ "$?" -eq 0 ]; 
+if [ "$?" -eq 0 ];
 	then 
 		if [ -d ./app/cache ]; then
-			setfacl setfacl -dR -m u:`whoami`:rwx ./app/cache/
-			setfacl setfacl -dR -m u:`whoami`:rwx ./app/logs/
+			setfacl -dR -m u:`whoami`:rwx ./app/cache/
+			setfacl -dR -m u:`whoami`:rwx ./app/logs/
 		fi
 		if [ -d ./var/cache ]; then
-			setfacl setfacl -dR -m u:`whoami`:rwx ./var/cache
-			setfacl setfacl -dR -m u:`whoami`:rwx ./var/logs
+			setfacl -dR -m u:`whoami`:rwx ./var/cache
+			setfacl -dR -m u:`whoami`:rwx ./var/logs
 		fi 
 fi
