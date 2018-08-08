@@ -363,10 +363,10 @@ else
 		rm -rf clonetmp
 fi
 
-if [ "$sudo_opt" == "sudo" ]; then
-	me=`whoami`
-	me_group=`id -g`
-	sudo chown -R ./ $me:$me_group
-fi
+
+me=`whoami`
+me_group=`id -g`
+sudo chown -R ./ $me:$me_group
+
 
 
