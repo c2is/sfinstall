@@ -7,10 +7,16 @@ sfinstall [subdirectory]
 
 ## Description
 Installe Symfony et optionnellement un environnement docker 
-L'environnement docker fourni :
+L'installation de Symfony fournit :
+- un .gitignore adapté,
+- un parameters.yml prêt à l'emploi avec docker,
+- les fichier *-at-preprod *-at-prod utilisés chez Acti.
+
+
+L'environnement docker fournit :
 - apache, php-fpm, mysql...
-- un certificat ssl valide pour les domaines types *.dev.acti
-- un service mail utilisable en smtp ou directemnt via sendmail dans le container php
+- un certificat ssl valide pour les domaines types *.dev.acti,
+- un service mail utilisable en smtp ou directemnt via sendmail dans le container php.
 
 ## Installation
 
