@@ -33,6 +33,8 @@ function dockerize () {
 
 	perl -pi -e "s/- CERTIFICAT_CNAME=unprojet.dev.acti/- CERTIFICAT_CNAME=$domain/" docker-compose.yml
 
+	perl -pi -e "s/- maildomain=unprojet.dev.acti/- maildomain=$domain/" docker-compose.yml
+
 	read -p "Voulez-vous ajouter la ligne \"127.0.0.1 $domain\" à votre fichier hosts ? [y,N] " resp
 	if [ $resp != "y" ]; then 
 		echo "Ok, ok, on touche pas au fichier hosts..."; 
@@ -100,7 +102,7 @@ function get_next_free_port() {
 function docker_compose_write () {
 	cat << EOF > $install_path/docker-compose.yml
 application:
-    image: debian:jessie
+    image: debian:stretch
     volumes:
         - ./:/var/www/website
     tty: true
@@ -112,11 +114,12 @@ db:
         MYSQL_DATABASE: website
         MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
 php:
-    image: php:7.0.31-fpm-stretch
+    image: c2is/debian-php
     volumes_from:
         - application
     links:
         - db
+        - mail
 composer:
     image: composer
     volumes_from:
@@ -136,6 +139,13 @@ apache:
         - php
     volumes_from:
         - application
+mail:
+    image: catatnight/postfix
+    environment:
+        - maildomain=unprojet.dev.acti
+        - smtp_user=web:web
+    ports:
+        - "25"
 EOF
 
 }

@@ -74,10 +74,16 @@ parameters:
     database_name: website
     database_user: root
     database_password: root
-    mailer_transport: smtp
-    mailer_host: 127.0.0.1
-    mailer_user: null
-    mailer_password: null
+    # utilise sendmail dans le container php, sendmail étant en fait un ssmtp utilisant le container "mail"
+    mailer_transport: mail
+    mailer_host: ~
+    mailer_user: ~
+    mailer_password: ~
+    # possible d'utiliser le container "mail" directement en smtp :
+    # mailer_transport: smtp
+    # mailer_host: mail
+    # mailer_user: web
+    # mailer_password: web
     secret: ThisTokenIsNotSoSecretChangeIt
 EOF
 	cp $install_path"/app/config/parameters.yml.dist" $install_path"/app/config/parameters.yml-at-prod"
