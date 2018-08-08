@@ -38,3 +38,9 @@ rm -rf ..?* .[!.]* *
 echolor -y "L'installation est terminée"
 
 . $abs_path/clone.sh
+
+if [ "$sudo_opt" == "sudo" ]; then
+	me=`whoami`
+	me_group=`id -g`
+	sudo chown -R ./ $me:$me_group
+fi
