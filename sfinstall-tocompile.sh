@@ -44,3 +44,16 @@ if [ "$sudo_opt" == "sudo" ]; then
 	me_group=`id -g`
 	sudo chown -R ./ $me:$me_group
 fi
+
+setfacl=$(setfacl)
+if [ "$?" -eq 0 ]; 
+	then 
+		if [ -d ./app/cache ]; then
+			setfacl setfacl -dR -m u:`whoami`:rwx ./app/cache/
+			setfacl setfacl -dR -m u:`whoami`:rwx ./app/logs/
+		fi
+		if [ -d ./var/cache ]; then
+			setfacl setfacl -dR -m u:`whoami`:rwx ./var/cache
+			setfacl setfacl -dR -m u:`whoami`:rwx ./var/logs
+		fi 
+fi
