@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 if [ "$(uname)" != "Linux" ]; then rpath=`readlink "$0"`; else rpath=`readlink -f "$0"`; fi;
 abs_path=$(dirname "$rpath")
 
