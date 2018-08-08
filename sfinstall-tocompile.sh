@@ -22,6 +22,12 @@ else
     cd $dir
 fi
 
+setfacl=$(setfacl)
+if [ "$?" -eq 0 ];
+	then 
+		sudo setfacl -dR -m u:`whoami`:rwx .
+fi
+
 sudo_opt=""
 read -p "Avez-vous besoin de sudo pour les commandes docker ? [Y,n] : " yn
 if [[ $yn =~ ^[Yy]$ ]]
@@ -45,8 +51,4 @@ if [ "$sudo_opt" == "sudo" ]; then
 	sudo chown -R ./ $me:$me_group
 fi
 
-setfacl=$(setfacl)
-if [ "$?" -eq 0 ];
-	then 
-		sudo setfacl -dR -m u:`whoami`:rwx .
-fi
+
