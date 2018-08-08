@@ -25,6 +25,10 @@ L'environnement docker fournit :
 ```sh
 curl -skL https://raw.githubusercontent.com/c2is/sfinstall/master/sfinstall.sh --output /usr/local/bin/sfinstall; chmod +x /usr/local/bin/sfinstall;
 ```
+#### Ubuntu
+```sh
+sudo curl -skL https://raw.githubusercontent.com/c2is/sfinstall/master/sfinstall.sh --output /usr/local/bin/sfinstall; sudo chmod +x /usr/local/bin/sfinstall;
+```
 
 #### Windows Mingw
 ```sh
@@ -36,6 +40,11 @@ mkdir ~/bin/; curl -skL https://raw.githubusercontent.com/c2is/sfinstall/master/
 #### Linux/Bsd
 ```sh
 curl -skL https://raw.githubusercontent.com/c2is/sfinstall/master/sfinstall.sh --output /usr/local/bin/sfinstall;
+```
+
+#### Ubuntu
+```sh
+sudo curl -skL https://raw.githubusercontent.com/c2is/sfinstall/master/sfinstall.sh --output /usr/local/bin/sfinstall;
 ```
 
 #### Windows Mingw
