@@ -366,12 +366,5 @@ fi
 setfacl=$(setfacl)
 if [ "$?" -eq 0 ];
 	then 
-		if [ -d ./app/cache ]; then
-			setfacl -dR -m u:`whoami`:rwx ./app/cache/
-			setfacl -dR -m u:`whoami`:rwx ./app/logs/
-		fi
-		if [ -d ./var/cache ]; then
-			setfacl -dR -m u:`whoami`:rwx ./var/cache
-			setfacl -dR -m u:`whoami`:rwx ./var/logs
-		fi 
+		sudo setfacl -dR -m u:`whoami`:rwx .
 fi
