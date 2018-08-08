@@ -48,7 +48,7 @@ echolor -y "L'installation est terminée"
 
 me=`whoami`
 me_group=`id -g`
-sudo chown -R ./ $me:$me_group
+sudo chown -R $me:$me_group ./
 
 
 
