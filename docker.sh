@@ -1,12 +1,19 @@
 #!/bin/bash
 function dockerize () {
+
+	netstat=$(netstat)
+	if [ "$?" -ne 0 ]; 
+		then 
+			echolor y  "netstat n'est pas installé sur votre machine, il est vivement conseillé de l'installer"; 
+	fi
+
 	port="[0-9]"
 	if [ -f docker-compose.yml ]; then
 
 		read -p "Le fichier docker-compose.yml existe déjà, on l'écrase ? [y,N] " resp
 		if [ $resp != "y" ]; then echo "Ok..."; return 0; fi
 		echo "Arrêts des containers de cet environnement..."
-		docker-compose stop
+		$sudo_opt docker-compose stop
 	fi
 
 	docker_compose_write
@@ -45,7 +52,7 @@ function dockerize () {
 	echo '""""""""""""""""'
 	echo -e "Démarrage des containers...\n"
 
-	docker-compose up -d
+	$sudo_opt docker-compose up -d
 	if [ "$?" -ne 0 ]; then return 0; fi
 
 	mysql_container=`basename $(pwd) | sed "s/_//g"`
@@ -60,9 +67,9 @@ function dockerize () {
 
 function is_used() {
 	if [ "$(uname)" == "Darwin" ]; then
-		port_used=`netstat -anv | awk 'NR>2{print $4}' | grep -E '\.'$port | sed 's/.*\.//' | sort -n | uniq`
+		port_used=`$sudo_opt netstat -anv | awk 'NR>2{print $4}' | grep -E '\.'$port | sed 's/.*\.//' | sort -n | uniq`
 	else
-		port_used=`netstat -lnt | awk 'NR>2{print $4}' | grep -E '0.0.0.0:$port' | sed 's/.*://' | sort -n | uniq`
+		port_used=`$sudo_opt netstat -lnt | awk 'NR>2{print $4}' | grep -E '0.0.0.0:$port' | sed 's/.*://' | sort -n | uniq`
 	fi
 
 	port=$1
