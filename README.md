@@ -6,7 +6,8 @@ sfinstall [subdirectory]
 ```
 
 ## Description
-Installe Symfony et optionnellement un environnement docker 
+Installe Symfony et optionnellement un environnement docker  
+
 L'installation de Symfony fournit :
 - un .gitignore adapté,
 - un parameters.yml prêt à l'emploi avec docker,
