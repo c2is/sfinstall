@@ -22,7 +22,7 @@ else
     cd $dir
 fi
 
-setfacl=$(setfacl -h)
+setfacl=$(which setfacl)
 if [ "$?" -eq 0 ];
 	then 
 		sudo setfacl -dR -m u:`whoami`:rwx .
