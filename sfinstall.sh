@@ -297,7 +297,7 @@ db:
         MYSQL_DATABASE: website
         MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
 php:
-    image: c2is/debian-php
+    image: c2is/ubuntu-php
     volumes_from:
         - application
     links:
