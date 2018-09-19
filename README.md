@@ -19,6 +19,11 @@ L'environnement docker fournit :
 - un certificat ssl valide pour les domaines types *.dev.acti,
 - un service mail utilisable en smtp ou directemnt via sendmail dans le container php.
 
+Le composer est un container sans démon, il s'utilise donc ainsi :  
+```sh
+dc run composer composer --working-dir=/var/www/website
+```
+
 ## Installation
 
 #### Linux/Bsd
