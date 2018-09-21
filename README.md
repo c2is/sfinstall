@@ -23,6 +23,10 @@ Le composer est un container sans démon, il s'utilise donc ainsi :
 ```sh
 dc run composer composer --working-dir=/var/www/website
 ```
+Bien mettre les commandes composer avant --working-dir, par exemple :  
+`sh
+dc run composer composer require google/apiclient:^2.0 --working-dir=/var/www/website
+```
 
 ## Installation
 
