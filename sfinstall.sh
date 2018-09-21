@@ -314,7 +314,7 @@ apache:
     environment:
         - WEBSITE_HOST=unprojet.dev.acti
         - CERTIFICAT_CNAME=unprojet.dev.acti
-        - SYMFONY_VHOST_COMPLIANT=yes
+        - VHOST_SUFFIX=web
     ports:
         - "80:80"
         - "443:443"
