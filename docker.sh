@@ -51,9 +51,26 @@ function dockerize () {
 	fi
 	echo '""""""""""""""""'
 	echo -e "Démarrage des containers...\n"
-
 	$sudo_opt docker-compose up -d
 	if [ "$?" -ne 0 ]; then return 0; fi
+
+	# Symfony 4
+	if [ -d ./var/www/website/public]; 
+	then
+		docker-compose exec php chown -R www-data /var/www/website/public
+	fi
+	# Symfony 3 et 4
+	if [ -d ./var/www/website/var]; 
+	then
+		docker-compose exec php chown -R www-data /var/www/website/var
+	fi
+
+	# Symfony 2
+	if [ -d ./var/www/website/app/cache]; 
+	then
+		docker-compose exec php chown -R www-data /var/www/website/app/cache
+		docker-compose exec php chown -R www-data /var/www/website/app/logs
+	fi
 
 	mysql_container=`basename $(pwd) | sed "s/_//g"`
 	echo '""""""""""""""""'
