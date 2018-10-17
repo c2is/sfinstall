@@ -231,18 +231,18 @@ function dockerize () {
 	if [ "$?" -ne 0 ]; then return 0; fi
 
 	# Symfony 4
-	if [ -d ./var/www/website/public]; 
+	if [ -d ./public]; 
 	then
 		docker-compose exec php chown -R www-data /var/www/website/public
 	fi
 	# Symfony 3 et 4
-	if [ -d ./var/www/website/var]; 
+	if [ -d ./var]; 
 	then
 		docker-compose exec php chown -R www-data /var/www/website/var
 	fi
 
 	# Symfony 2
-	if [ -d ./var/www/website/app/cache]; 
+	if [ -d ./app/cache]; 
 	then
 		docker-compose exec php chown -R www-data /var/www/website/app/cache
 		docker-compose exec php chown -R www-data /var/www/website/app/logs
